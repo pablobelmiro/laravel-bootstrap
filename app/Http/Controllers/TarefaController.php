@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TarefaController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -43,9 +46,29 @@ class TarefaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show() //$id
     {
-        //
+        //Nesse método irei utilizar o helper auth para realizar a verificação do usuário em específico
+        //Utilização dos métodos estáticos do laravel
+        //Podemos também utilizar o helper user()
+        if(Auth::check()){
+            $id = Auth::user()->id;
+            $name = Auth::user()->name;
+            $email = Auth::user()->email;
+
+            $dadosUsuario = [
+                'id' => $id,
+                'name' => $name,
+                'email' => $email
+            ];
+            Log::debug(json_encode($dadosUsuario));
+
+            
+        }else{
+            return 'Usuário não logado';
+        }
+        
+        return json_encode($dadosUsuario);;
     }
 
     /**
